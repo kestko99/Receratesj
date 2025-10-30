@@ -9,11 +9,20 @@ if (currentTheme === 'dark') {
 }
 
 themeToggle.addEventListener('click', () => {
+    // Add a smooth transition class
+    body.style.transition = 'background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+    
     body.classList.toggle('dark-mode');
     
     // Save the preference
     const theme = body.classList.contains('dark-mode') ? 'dark' : 'light';
     localStorage.setItem('theme', theme);
+    
+    // Add ripple effect to button
+    themeToggle.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+        themeToggle.style.transform = '';
+    }, 150);
 });
 
 // Smooth scroll for internal links
