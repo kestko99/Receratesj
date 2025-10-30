@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Youtube, Twitter } from 'lucide-react';
 import ThemeToggle from './components/ThemeToggle';
 
 function App() {
@@ -65,29 +64,6 @@ function App() {
               >
                 Compile Avatar
               </a>
-            </div>
-
-            {/* Social Card */}
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl p-6 transition-colors duration-500">
-              <h2 className="text-2xl font-bold text-center mb-4 text-gray-900 dark:text-white transition-colors duration-500">
-                Join our social:
-              </h2>
-              <div className="flex justify-center gap-4">
-                <a
-                  href="#"
-                  className="w-14 h-14 bg-brand-blue text-white rounded-xl flex items-center justify-center hover:-translate-y-1 transition-transform duration-300"
-                  aria-label="YouTube"
-                >
-                  <Youtube size={24} />
-                </a>
-                <a
-                  href="#"
-                  className="w-14 h-14 bg-brand-blue text-white rounded-xl flex items-center justify-center hover:-translate-y-1 transition-transform duration-300"
-                  aria-label="Twitter"
-                >
-                  <Twitter size={24} />
-                </a>
-              </div>
             </div>
           </div>
 
