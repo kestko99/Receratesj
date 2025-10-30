@@ -1,6 +1,6 @@
-# Rotemplate - Texture Copier Website
+# rbxFoundry - Texture Copier Website
 
-A 1:1 replica of the Rotemplate texture copier website for Roblox avatars.
+A 1:1 replica of the rbxFoundry texture copier website for Roblox avatars.
 
 ## Features
 
