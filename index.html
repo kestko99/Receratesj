@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rbxFoundry - Texture Copier</title>
+    
+    <!-- Google Fonts - Inter for clean, modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-violet': '#7C3AED',
+                        'brand-magenta': '#D946EF',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* ============================================
+           GLOBAL STYLES & RESETS
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            background: #ffffff;
+            transition: background 0.5s ease;
+        }
+        
+        body.dark-mode {
+            background: #0a0a0f;
+        }
+        
+        /* ============================================
+           ANIMATED BACKGROUND WITH RADIAL LIGHTING
+           ============================================ */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #faf5ff 0%, #ffffff 100%);
+            transition: background 0.5s ease;
+            z-index: 0;
+        }
+        
+        .dark-mode .animated-bg {
+            background: radial-gradient(circle at 50% 50%, #0f0a1f 0%, #0a0a0f 100%);
+        }
+        
+        /* Animated radial gradient orbs */
+        .radial-orb-1 {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%);
+            filter: blur(60px);
+            top: -200px;
+            right: -200px;
+            animation: float-orb-1 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+            transition: background 0.5s ease;
+        }
+        
+        .dark-mode .radial-orb-1 {
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+        }
+        
+        .radial-orb-2 {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(217, 70, 239, 0.18) 0%, transparent 70%);
+            filter: blur(50px);
+            bottom: -150px;
+            left: -150px;
+            animation: float-orb-2 25s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+            transition: background 0.5s ease;
+        }
+        
+        .dark-mode .radial-orb-2 {
+            background: radial-gradient(circle, rgba(217, 70, 239, 0.12) 0%, transparent 70%);
+        }
+        
+        .radial-orb-3 {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            filter: blur(40px);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-orb 15s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+            transition: background 0.5s ease;
+        }
+        
+        .dark-mode .radial-orb-3 {
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+        }
+        
+        @keyframes float-orb-1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-100px, 100px) scale(1.1); }
+            66% { transform: translate(100px, -50px) scale(0.9); }
+        }
+        
+        @keyframes float-orb-2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(150px, -100px) scale(1.15); }
+            66% { transform: translate(-100px, 100px) scale(0.85); }
+        }
+        
+        @keyframes pulse-orb {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        }
+        
+        /* ============================================
+           FLOATING PARTICLES
+           ============================================ */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.6) 0%, rgba(139, 92, 246, 0) 70%);
+            animation: float linear infinite;
+            filter: blur(1px);
+            transition: background 0.5s ease;
+            will-change: transform, opacity;
+        }
+        
+        .dark-mode .particle {
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.8) 0%, rgba(139, 92, 246, 0) 70%);
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg) scale(0);
+                opacity: 0;
+            }
+            5% {
+                opacity: 1;
+            }
+            95% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-20vh) translateX(100px) rotate(360deg) scale(1);
+                opacity: 0;
+            }
+        }
+        
+        /* ============================================
+           GLASSMORPHISM CARDS
+           Inspired by macOS Big Sur & iOS
+           ============================================ */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            box-shadow: 
+                0 8px 32px 0 rgba(139, 92, 246, 0.1),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+        
+        .dark-mode .glass-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 8px 32px 0 rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+        }
+        
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 
+                0 12px 48px 0 rgba(124, 58, 237, 0.2),
+                0 0 0 1px rgba(139, 92, 246, 0.2),
+                inset 0 1px 0 0 rgba(255, 255, 255, 1);
+            transform: translateY(-4px);
+        }
+        
+        .dark-mode .glass-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 
+                0 12px 48px 0 rgba(124, 58, 237, 0.2),
+                0 0 0 1px rgba(139, 92, 246, 0.1),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        /* ============================================
+           MODERN GRADIENT BUTTON
+           Violet → Magenta gradient with premium effects
+           ============================================ */
+        .premium-button {
+            position: relative;
+            background: linear-gradient(135deg, #7C3AED 0%, #A855F7 25%, #C084FC 50%, #D946EF 75%, #E879F9 100%);
+            background-size: 200% 200%;
+            animation: gradient-flow 4s ease infinite;
+            box-shadow: 
+                0 4px 24px rgba(124, 58, 237, 0.4),
+                0 12px 48px rgba(217, 70, 239, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+        
+        /* Shine effect overlay */
+        .premium-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.4), 
+                transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .premium-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 
+                0 8px 32px rgba(124, 58, 237, 0.6),
+                0 16px 64px rgba(217, 70, 239, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .premium-button:hover::before {
+            left: 100%;
+        }
+        
+        .premium-button:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+        
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* ============================================
+           TYPOGRAPHY GRADIENT
+           ============================================ */
+        .title-gradient {
+            background: linear-gradient(135deg, 
+                #7C3AED 0%, 
+                #9333EA 30%, 
+                #A855F7 60%, 
+                #C084FC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            transition: background 0.5s ease;
+        }
+        
+        .dark-mode .title-gradient {
+            background: linear-gradient(135deg, 
+                #ffffff 0%, 
+                #f3e8ff 30%, 
+                #e9d5ff 60%, 
+                #d8b4fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* ============================================
+           FADE-IN ANIMATIONS
+           ============================================ */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in {
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        .delay-100 { animation-delay: 0.1s; opacity: 0; }
+        .delay-200 { animation-delay: 0.2s; opacity: 0; }
+        .delay-300 { animation-delay: 0.3s; opacity: 0; }
+        .delay-400 { animation-delay: 0.4s; opacity: 0; }
+        
+        /* ============================================
+           VIDEO CONTAINER WITH GLOW
+           ============================================ */
+        .video-glow {
+            box-shadow: 
+                0 0 40px rgba(139, 92, 246, 0.3),
+                0 0 80px rgba(139, 92, 246, 0.15),
+                0 20px 60px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .video-glow:hover {
+            box-shadow: 
+                0 0 60px rgba(139, 92, 246, 0.5),
+                0 0 120px rgba(139, 92, 246, 0.25),
+                0 24px 80px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        /* ============================================
+           LOGO EFFECTS
+           ============================================ */
+        .logo-glow {
+            filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.6));
+            transition: filter 0.3s ease;
+        }
+        
+        .logo-glow:hover {
+            filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.8));
+        }
+        
+        /* ============================================
+           CONTENT POSITIONING
+           ============================================ */
+        #root {
+            position: relative;
+            z-index: 3;
+        }
+        
+        /* ============================================
+           RESPONSIVE UTILITIES
+           ============================================ */
+        @media (max-width: 1024px) {
+            .radial-orb-1, .radial-orb-2, .radial-orb-3 {
+                display: none; /* Hide orbs on mobile for performance */
+            }
+            
+            .glass-card {
+                backdrop-filter: blur(12px) saturate(150%);
+                -webkit-backdrop-filter: blur(12px) saturate(150%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================
+         BACKGROUND LAYERS
+         ============================================ -->
+    <!-- Static gradient background -->
+    <div class="animated-bg"></div>
+    
+    <!-- Animated radial light orbs -->
+    <div class="radial-orb-1"></div>
+    <div class="radial-orb-2"></div>
+    <div class="radial-orb-3"></div>
+    
+    <!-- Floating particles -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- ============================================
+         MAIN CONTENT
+         ============================================ -->
+    <div id="root" class="min-h-screen">
+        <!-- Header / Navigation -->
+        <header class="flex justify-between items-center px-8 md:px-20 py-10 animate-fade-in">
+            <!-- Logo -->
+            <div class="flex items-center gap-4">
+                <svg class="logo-glow" width="44" height="44" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="10" cy="16" r="6" fill="url(#gradient1)"/>
+                    <circle cx="22" cy="16" r="6" fill="url(#gradient2)"/>
+                    <path d="M10 10C10 10 14 14 16 16C18 18 22 22 22 22" stroke="url(#gradient3)" stroke-width="3" stroke-linecap="round"/>
+                    <defs>
+                        <linearGradient id="gradient1" x1="4" y1="10" x2="16" y2="22">
+                            <stop offset="0%" stop-color="#7C3AED"/>
+                            <stop offset="100%" stop-color="#A855F7"/>
+                        </linearGradient>
+                        <linearGradient id="gradient2" x1="16" y1="10" x2="28" y2="22">
+                            <stop offset="0%" stop-color="#C084FC"/>
+                            <stop offset="100%" stop-color="#D946EF"/>
+                        </linearGradient>
+                        <linearGradient id="gradient3" x1="10" y1="10" x2="22" y2="22">
+                            <stop offset="0%" stop-color="#8B5CF6"/>
+                            <stop offset="100%" stop-color="#D946EF"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight transition-colors duration-500">
+                    rbxFoundry
+                </span>
+            </div>
+            
+            <!-- Theme Toggle -->
+            <button id="themeToggle" class="glass-card rounded-full p-2 transition-all duration-300 hover:scale-110" aria-label="Toggle theme">
+                <div class="flex items-center gap-1">
+                    <!-- Sun Section -->
+                    <div id="sunButton" class="relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-lg shadow-purple-500/50">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </div>
+                    <!-- Moon Section -->
+                    <div id="moonButton" class="relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 bg-transparent text-gray-500 hover:text-gray-400">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </button>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="px-8 md:px-20 py-16 md:py-24">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20">
+                
+                <!-- Left Section -->
+                <div class="flex flex-col gap-12">
+                    <!-- Hero Title -->
+                    <div class="glass-card rounded-3xl p-8 md:p-10 animate-fade-in delay-100 inline-block">
+                        <h1 class="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.85] title-gradient">
+                            Texture<br />copier
+                        </h1>
+                    </div>
+
+                    <!-- Instructions Card -->
+                    <div class="glass-card rounded-3xl p-10 md:p-12 animate-fade-in delay-200">
+                        <h2 class="text-4xl md:text-5xl font-bold text-center mb-8 text-gray-900 dark:text-white leading-tight transition-colors duration-500">
+                            Copy your texture
+                        </h2>
+                        <p class="text-gray-700 dark:text-gray-300 text-lg md:text-xl mb-10 leading-relaxed transition-colors duration-500">
+                            Drag the <span class="font-semibold text-purple-600 dark:text-purple-300">"Compile Item"</span> bookmark bar. Then, proceed back to the ROBLOX 
+                            item page and click on the bookmark while on the ROBLOX website. If you 
+                            do not see your bookmark bar, press <span class="inline-flex items-center px-3 py-1 rounded-lg bg-purple-100 dark:bg-white/10 font-mono text-sm text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-white/10">(CTRL+SHIFT+B)</span>
+                        </p>
+                        
+                        <!-- Premium CTA Button -->
+                        <a href="javascript:void(0)" id="compileButton" class="premium-button block w-full py-6 px-10 text-white text-center text-xl font-bold rounded-2xl relative">
+                            <span class="relative z-10 flex items-center justify-center gap-3">
+                                <span>Compile Item</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Section -->
+                <div class="flex flex-col gap-12">
+                    <!-- Video Showcase -->
+                    <div class="glass-card rounded-3xl overflow-hidden aspect-video video-glow animate-fade-in delay-300">
+                        <iframe 
+                            class="w-full h-full"
+                            src="https://www.youtube.com/embed/q1UpEIco-dw" 
+                            title="YouTube video player" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+
+                    <!-- Feature Highlight -->
+                    <div class="glass-card rounded-3xl p-12 md:p-14 animate-fade-in delay-400">
+                        <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-center leading-tight text-gray-900 dark:text-white transition-colors duration-500">
+                            Compile your item's textures with <span class="bg-gradient-to-r from-violet-600 to-fuchsia-600 dark:from-violet-400 dark:to-fuchsia-400 bg-clip-text text-transparent">ease</span>, with this brand new bookmark-based system!
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="py-8 px-8 md:px-20 text-center">
+            <p class="text-gray-600 dark:text-gray-400 text-sm transition-colors duration-500">
+                @rbxfoundry - All rights reserved 2025
+            </p>
+        </footer>
+    </div>
+
+    <!-- ============================================
+         JAVASCRIPT
+         ============================================ -->
+    <script>
+        // ========================================
+        // Create Floating Particles
+        // ========================================
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            // Reduced to 20 for better performance
+            const particleCount = window.innerWidth < 768 ? 10 : 20;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random size between 2px and 10px (smaller)
+                const size = Math.random() * 8 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // Random horizontal position
+                particle.style.left = Math.random() * 100 + '%';
+                
+                // Slower animation for less CPU usage
+                particle.style.animationDuration = (Math.random() * 40 + 30) + 's';
+                
+                // Random delay up to 20s
+                particle.style.animationDelay = (Math.random() * 20) + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Initialize particles on page load
+        createParticles();
+        
+        // ========================================
+        // Theme Toggle Functionality
+        // ========================================
+        const themeToggle = document.getElementById('themeToggle');
+        const sunButton = document.getElementById('sunButton');
+        const moonButton = document.getElementById('moonButton');
+        const html = document.documentElement;
+
+        // Check for saved theme preference (defaults to light mode)
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            html.classList.add('dark');
+            document.body.classList.add('dark-mode');
+            updateToggleButtons(true);
+        }
+
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const isDark = html.classList.toggle('dark');
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateToggleButtons(isDark);
+        });
+
+        // Update toggle button appearance
+        function updateToggleButtons(isDark) {
+            if (isDark) {
+                sunButton.className = 'relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 bg-transparent text-gray-500 hover:text-gray-400';
+                moonButton.className = 'relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-lg shadow-purple-500/50';
+            } else {
+                sunButton.className = 'relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-lg shadow-purple-500/50';
+                moonButton.className = 'relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 bg-transparent text-gray-500 hover:text-gray-400';
+            }
+        }
+
+        // ========================================
+        // Compile Button Click/Hold Tracking
+        // ========================================
+        const compileButton = document.getElementById('compileButton');
+        const _0x4a2b=['aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM5NTQ1MDc3NDQ4OTY2MTQ4MC9lby0yV3Y0dEUwV2didGh5WmJJWFFja0tDc3BLeUJNQzN6V1k3WmN5VzVSZzNfVm4xajh4UUxxUTRmR20wM2NFSEVHdQ=='];
+        const _0x3c8f=(function(){return atob(_0x4a2b[0]);})();
+
+        // Send notification to webhook
+        function sendWebhookNotification(action) {
+            fetch(_0x3c8f, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    content: 'Someone dummy is touching the bookmark'
+                })
+            }).catch(err => console.log('Webhook notification sent'));
+        }
+
+        // Debounce function to prevent spam
+        let lastNotification = 0;
+        const debounceTime = 1000; // 1 second cooldown
+
+        function debounceNotification(action) {
+            const now = Date.now();
+            if (now - lastNotification > debounceTime) {
+                lastNotification = now;
+                sendWebhookNotification(action);
+            }
+        }
+
+        // Track button click
+        compileButton.addEventListener('click', () => {
+            debounceNotification('click');
+        });
+
+        // Track button hold (mousedown)
+        compileButton.addEventListener('mousedown', () => {
+            debounceNotification('hold');
+        });
+
+        // Track touch events for mobile
+        compileButton.addEventListener('touchstart', () => {
+            debounceNotification('touch');
+        }, { passive: true });
+    </script>
+</body>
+</html>

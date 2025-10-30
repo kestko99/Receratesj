@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rbxFoundry - Texture Copier</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-blue': '#2F54EB',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body>
+    <div id="root" class="min-h-screen bg-gray-200 dark:bg-gray-900 transition-colors duration-500">
+        <!-- Header -->
+        <header class="flex justify-between items-center px-6 md:px-12 py-6">
+            <div class="flex items-center gap-3">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="10" cy="16" r="6" fill="#2F54EB"/>
+                    <circle cx="22" cy="16" r="6" fill="#2F54EB"/>
+                    <path d="M10 10C10 10 14 14 16 16C18 18 22 22 22 22" stroke="#2F54EB" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <span class="text-2xl font-bold text-gray-900 dark:text-white transition-colors duration-500">
+                    rbxFoundry
+                </span>
+            </div>
+            <!-- Theme Toggle -->
+            <button id="themeToggle" class="relative flex items-center bg-white dark:bg-gray-800 rounded-full p-1 shadow-lg transition-all duration-300 hover:scale-105" aria-label="Toggle theme">
+                <div class="flex items-center gap-1">
+                    <!-- Sun Section -->
+                    <div id="sunButton" class="relative z-10 flex items-center justify-center w-11 h-11 rounded-full transition-all duration-300 ease-in-out bg-brand-blue text-white">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </div>
+                    <!-- Moon Section -->
+                    <div id="moonButton" class="relative z-10 flex items-center justify-center w-11 h-11 rounded-full transition-all duration-300 ease-in-out bg-transparent text-gray-400">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="px-6 md:px-12 py-8">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                <!-- Left Section -->
+                <div class="flex flex-col gap-8">
+                    <!-- Main Title -->
+                    <h1 class="text-7xl md:text-8xl lg:text-9xl font-black leading-none text-gray-900 dark:text-white transition-colors duration-500">
+                        Texture<br />copier
+                    </h1>
+
+                    <!-- Instructions Card -->
+                    <div class="bg-gray-100 dark:bg-gray-800 rounded-2xl p-8 transition-colors duration-500">
+                        <h2 class="text-3xl font-bold text-center mb-4 text-gray-900 dark:text-white transition-colors duration-500">
+                            Copy your texture
+                        </h2>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed transition-colors duration-500">
+                            Drag the "Compile Avatar" bookmark bar. Then, proceed back to the ROBLOX 
+                            avatar page and click on the bookmark while on the ROBLOX website. If you 
+                            do not see your bookmark bar, press (CTRL+SHIFT+B)
+                        </p>
+                        <a href="javascript:void(0)" class="block w-full py-4 px-8 bg-brand-blue text-white text-center text-lg font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 hover:-translate-y-1 shadow-lg">
+                            Compile Avatar
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Section -->
+                <div class="flex flex-col gap-8">
+                    <!-- Video Container -->
+                    <div class="relative bg-black rounded-2xl overflow-hidden aspect-video">
+                        <img src="https://via.placeholder.com/640x360/1a1a1a/ffffff?text=Roblox+Avatar+Editor+Demo" alt="Roblox Avatar Editor Demo" class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-colors">
+                                <div class="w-0 h-0 border-l-[16px] border-l-gray-900 border-t-[12px] border-t-transparent border-b-[12px] border-b-transparent ml-1"></div>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+                            <span class="text-white text-sm">0:00 / 2:13</span>
+                        </div>
+                    </div>
+
+                    <!-- Feature Text -->
+                    <div class="bg-gray-100 dark:bg-gray-800 rounded-2xl p-10 transition-colors duration-500">
+                        <h2 class="text-3xl md:text-4xl font-bold text-center leading-snug text-gray-900 dark:text-white transition-colors duration-500">
+                            Compile your avatar's textures with ease, with this brand new bookmark-based system!
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const sunButton = document.getElementById('sunButton');
+        const moonButton = document.getElementById('moonButton');
+        const html = document.documentElement;
+
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            html.classList.add('dark');
+            sunButton.className = 'relative z-10 flex items-center justify-center w-11 h-11 rounded-full transition-all duration-300 ease-in-out bg-transparent text-gray-400 dark:text-gray-500';
+            moonButton.className = 'relative z-10 flex items-center justify-center w-11 h-11 rounded-full transition-all duration-300 ease-in-out bg-brand-blue text-white';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            
+            // Update button styles
+            if (html.classList.contains('dark')) {
+                sunButton.className = 'relative z-10 flex items-center justify-center w-11 h-11 rounded-full transition-all duration-300 ease-in-out bg-transparent text-gray-400 dark:text-gray-500';
+                moonButton.className = 'relative z-10 flex items-center justify-center w-11 h-11 rounded-full transition-all duration-300 ease-in-out bg-brand-blue text-white';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                sunButton.className = 'relative z-10 flex items-center justify-center w-11 h-11 rounded-full transition-all duration-300 ease-in-out bg-brand-blue text-white';
+                moonButton.className = 'relative z-10 flex items-center justify-center w-11 h-11 rounded-full transition-all duration-300 ease-in-out bg-transparent text-gray-400';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>
