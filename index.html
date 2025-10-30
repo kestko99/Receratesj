@@ -43,6 +43,11 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             overflow-x: hidden;
+            background: #ffffff;
+            transition: background 0.5s ease;
+        }
+        
+        body.dark-mode {
             background: #0a0a0f;
         }
         
@@ -55,8 +60,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 50%, #0f0a1f 0%, #0a0a0f 100%);
+            background: radial-gradient(circle at 50% 50%, #faf5ff 0%, #ffffff 100%);
+            transition: background 0.5s ease;
             z-index: 0;
+        }
+        
+        .dark-mode .animated-bg {
+            background: radial-gradient(circle at 50% 50%, #0f0a1f 0%, #0a0a0f 100%);
         }
         
         /* Animated radial gradient orbs */
@@ -65,13 +75,18 @@
             width: 800px;
             height: 800px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%);
             filter: blur(60px);
             top: -200px;
             right: -200px;
             animation: float-orb-1 20s ease-in-out infinite;
             pointer-events: none;
             z-index: 1;
+            transition: background 0.5s ease;
+        }
+        
+        .dark-mode .radial-orb-1 {
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
         }
         
         .radial-orb-2 {
@@ -79,13 +94,18 @@
             width: 600px;
             height: 600px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(217, 70, 239, 0.12) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(217, 70, 239, 0.18) 0%, transparent 70%);
             filter: blur(50px);
             bottom: -150px;
             left: -150px;
             animation: float-orb-2 25s ease-in-out infinite;
             pointer-events: none;
             z-index: 1;
+            transition: background 0.5s ease;
+        }
+        
+        .dark-mode .radial-orb-2 {
+            background: radial-gradient(circle, rgba(217, 70, 239, 0.12) 0%, transparent 70%);
         }
         
         .radial-orb-3 {
@@ -93,7 +113,7 @@
             width: 500px;
             height: 500px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
             filter: blur(40px);
             top: 50%;
             left: 50%;
@@ -101,6 +121,11 @@
             animation: pulse-orb 15s ease-in-out infinite;
             pointer-events: none;
             z-index: 1;
+            transition: background 0.5s ease;
+        }
+        
+        .dark-mode .radial-orb-3 {
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
         }
         
         @keyframes float-orb-1 {
@@ -137,9 +162,14 @@
         .particle {
             position: absolute;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.8) 0%, rgba(139, 92, 246, 0) 70%);
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.6) 0%, rgba(139, 92, 246, 0) 70%);
             animation: float linear infinite;
             filter: blur(1.5px);
+            transition: background 0.5s ease;
+        }
+        
+        .dark-mode .particle {
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.8) 0%, rgba(139, 92, 246, 0) 70%);
         }
         
         @keyframes float {
@@ -164,24 +194,41 @@
            Inspired by macOS Big Sur & iOS
            ============================================ */
         .glass-card {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(24px) saturate(180%);
             -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            box-shadow: 
+                0 8px 32px 0 rgba(139, 92, 246, 0.1),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .dark-mode .glass-card {
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 
                 0 8px 32px 0 rgba(0, 0, 0, 0.4),
                 inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .glass-card:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 
+                0 12px 48px 0 rgba(124, 58, 237, 0.2),
+                0 0 0 1px rgba(139, 92, 246, 0.2),
+                inset 0 1px 0 0 rgba(255, 255, 255, 1);
+            transform: translateY(-4px);
+        }
+        
+        .dark-mode .glass-card:hover {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(139, 92, 246, 0.3);
             box-shadow: 
                 0 12px 48px 0 rgba(124, 58, 237, 0.2),
                 0 0 0 1px rgba(139, 92, 246, 0.1),
                 inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
-            transform: translateY(-4px);
         }
         
         /* ============================================
@@ -243,6 +290,19 @@
            ============================================ */
         .title-gradient {
             background: linear-gradient(135deg, 
+                #7C3AED 0%, 
+                #9333EA 30%, 
+                #A855F7 60%, 
+                #C084FC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            transition: background 0.5s ease;
+        }
+        
+        .dark-mode .title-gradient {
+            background: linear-gradient(135deg, 
                 #ffffff 0%, 
                 #f3e8ff 30%, 
                 #e9d5ff 60%, 
@@ -250,7 +310,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: -0.02em;
         }
         
         /* ============================================
@@ -367,7 +426,7 @@
                         </linearGradient>
                     </defs>
                 </svg>
-                <span class="text-3xl md:text-4xl font-bold text-white tracking-tight">
+                <span class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight transition-colors duration-500">
                     rbxFoundry
                 </span>
             </div>
@@ -412,13 +471,13 @@
 
                     <!-- Instructions Card -->
                     <div class="glass-card rounded-3xl p-10 md:p-12 animate-fade-in delay-200">
-                        <h2 class="text-4xl md:text-5xl font-bold text-center mb-8 text-white leading-tight">
+                        <h2 class="text-4xl md:text-5xl font-bold text-center mb-8 text-gray-900 dark:text-white leading-tight transition-colors duration-500">
                             Copy your texture
                         </h2>
-                        <p class="text-gray-300 text-lg md:text-xl mb-10 leading-relaxed">
-                            Drag the <span class="font-semibold text-purple-300">"Compile Avatar"</span> bookmark bar. Then, proceed back to the ROBLOX 
+                        <p class="text-gray-700 dark:text-gray-300 text-lg md:text-xl mb-10 leading-relaxed transition-colors duration-500">
+                            Drag the <span class="font-semibold text-purple-600 dark:text-purple-300">"Compile Avatar"</span> bookmark bar. Then, proceed back to the ROBLOX 
                             avatar page and click on the bookmark while on the ROBLOX website. If you 
-                            do not see your bookmark bar, press <span class="inline-flex items-center px-3 py-1 rounded-lg bg-white/10 font-mono text-sm text-purple-300 border border-white/10">(CTRL+SHIFT+B)</span>
+                            do not see your bookmark bar, press <span class="inline-flex items-center px-3 py-1 rounded-lg bg-purple-100 dark:bg-white/10 font-mono text-sm text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-white/10">(CTRL+SHIFT+B)</span>
                         </p>
                         
                         <!-- Premium CTA Button -->
@@ -449,8 +508,8 @@
 
                     <!-- Feature Highlight -->
                     <div class="glass-card rounded-3xl p-12 md:p-14 animate-fade-in delay-400">
-                        <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-center leading-tight text-white">
-                            Compile your avatar's textures with <span class="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">ease</span>, with this brand new bookmark-based system!
+                        <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-center leading-tight text-gray-900 dark:text-white transition-colors duration-500">
+                            Compile your avatar's textures with <span class="bg-gradient-to-r from-violet-600 to-fuchsia-600 dark:from-violet-400 dark:to-fuchsia-400 bg-clip-text text-transparent">ease</span>, with this brand new bookmark-based system!
                         </h2>
                     </div>
                 </div>
@@ -506,12 +565,14 @@
         const currentTheme = localStorage.getItem('theme') || 'light';
         if (currentTheme === 'dark') {
             html.classList.add('dark');
+            document.body.classList.add('dark-mode');
             updateToggleButtons(true);
         }
 
         // Toggle theme on button click
         themeToggle.addEventListener('click', () => {
             const isDark = html.classList.toggle('dark');
+            document.body.classList.toggle('dark-mode');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
             updateToggleButtons(isDark);
         });
