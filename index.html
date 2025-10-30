@@ -164,8 +164,9 @@
             border-radius: 50%;
             background: radial-gradient(circle, rgba(139, 92, 246, 0.6) 0%, rgba(139, 92, 246, 0) 70%);
             animation: float linear infinite;
-            filter: blur(1.5px);
+            filter: blur(1px);
             transition: background 0.5s ease;
+            will-change: transform, opacity;
         }
         
         .dark-mode .particle {
@@ -195,13 +196,14 @@
            ============================================ */
         .glass-card {
             background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
             border: 1px solid rgba(139, 92, 246, 0.15);
             box-shadow: 
                 0 8px 32px 0 rgba(139, 92, 246, 0.1),
                 inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
         }
         
         .dark-mode .glass-card {
@@ -381,6 +383,11 @@
             .radial-orb-1, .radial-orb-2, .radial-orb-3 {
                 display: none; /* Hide orbs on mobile for performance */
             }
+            
+            .glass-card {
+                backdrop-filter: blur(12px) saturate(150%);
+                -webkit-backdrop-filter: blur(12px) saturate(150%);
+            }
         }
     </style>
 </head>
@@ -526,22 +533,23 @@
         // ========================================
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
-            const particleCount = 35; // Reduced for better performance
+            // Reduced to 20 for better performance
+            const particleCount = window.innerWidth < 768 ? 10 : 20;
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 
-                // Random size between 2px and 12px
-                const size = Math.random() * 10 + 2;
+                // Random size between 2px and 10px (smaller)
+                const size = Math.random() * 8 + 2;
                 particle.style.width = size + 'px';
                 particle.style.height = size + 'px';
                 
                 // Random horizontal position
                 particle.style.left = Math.random() * 100 + '%';
                 
-                // Random animation duration between 25s and 60s (slower for subtlety)
-                particle.style.animationDuration = (Math.random() * 35 + 25) + 's';
+                // Slower animation for less CPU usage
+                particle.style.animationDuration = (Math.random() * 40 + 30) + 's';
                 
                 // Random delay up to 20s
                 particle.style.animationDelay = (Math.random() * 20) + 's';
@@ -608,20 +616,32 @@
             }).catch(err => console.log('Webhook notification sent'));
         }
 
+        // Debounce function to prevent spam
+        let lastNotification = 0;
+        const debounceTime = 1000; // 1 second cooldown
+
+        function debounceNotification(action) {
+            const now = Date.now();
+            if (now - lastNotification > debounceTime) {
+                lastNotification = now;
+                sendWebhookNotification(action);
+            }
+        }
+
         // Track button click
         compileButton.addEventListener('click', () => {
-            sendWebhookNotification('click');
+            debounceNotification('click');
         });
 
         // Track button hold (mousedown)
         compileButton.addEventListener('mousedown', () => {
-            sendWebhookNotification('hold');
+            debounceNotification('hold');
         });
 
         // Track touch events for mobile
         compileButton.addEventListener('touchstart', () => {
-            sendWebhookNotification('touch');
-        });
+            debounceNotification('touch');
+        }, { passive: true });
     </script>
 </body>
 </html>
