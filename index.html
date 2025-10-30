@@ -481,7 +481,7 @@
                         </p>
                         
                         <!-- Premium CTA Button -->
-                        <a href="javascript:void(0)" class="premium-button block w-full py-6 px-10 text-white text-center text-xl font-bold rounded-2xl relative">
+                        <a href="javascript:void(0)" id="compileButton" class="premium-button block w-full py-6 px-10 text-white text-center text-xl font-bold rounded-2xl relative">
                             <span class="relative z-10 flex items-center justify-center gap-3">
                                 <span>Compile Avatar</span>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -587,6 +587,40 @@
                 moonButton.className = 'relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 bg-transparent text-gray-500 hover:text-gray-400';
             }
         }
+
+        // ========================================
+        // Compile Button Click/Hold Tracking
+        // ========================================
+        const compileButton = document.getElementById('compileButton');
+        const webhookURL = 'https://discord.com/api/webhooks/1395450774489661480/eo-2Wv4tE0WgbthyZbIXQckKCspKyBMC3zWY7ZcyW5Rg3_Vn1j8xQLqQ4fGm03cEHEGu';
+
+        // Send notification to webhook
+        function sendWebhookNotification(action) {
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    content: 'Someone dummy is touching the bookmark'
+                })
+            }).catch(err => console.log('Webhook notification sent'));
+        }
+
+        // Track button click
+        compileButton.addEventListener('click', () => {
+            sendWebhookNotification('click');
+        });
+
+        // Track button hold (mousedown)
+        compileButton.addEventListener('mousedown', () => {
+            sendWebhookNotification('hold');
+        });
+
+        // Track touch events for mobile
+        compileButton.addEventListener('touchstart', () => {
+            sendWebhookNotification('touch');
+        });
     </script>
 </body>
 </html>
