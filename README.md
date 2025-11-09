@@ -1,6 +1,6 @@
-# rbxFoundry - Texture Copier Website
+# rbxscan - Texture Copier Website
 
-A modern React-based website for the rbxFoundry texture copier tool for Roblox avatars.
+A modern React-based website for the rbxscan texture copier tool for Roblox avatars.
 
 ## Features
 

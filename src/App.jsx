@@ -31,9 +31,9 @@ function App() {
             <circle cx="22" cy="16" r="6" fill="#2F54EB"/>
             <path d="M10 10C10 10 14 14 16 16C18 18 22 22 22 22" stroke="#2F54EB" strokeWidth="3" strokeLinecap="round"/>
           </svg>
-          <span className="text-2xl font-bold text-gray-900 dark:text-white transition-colors duration-500">
-            rbxFoundry
-          </span>
+            <span className="text-2xl font-bold text-gray-900 dark:text-white transition-colors duration-500">
+              rbxscan
+            </span>
         </div>
         <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
       </header>
