@@ -518,7 +518,7 @@
                     <div class="glass-card rounded-3xl overflow-hidden aspect-video video-glow animate-fade-in delay-300">
                         <iframe 
                             class="w-full h-full"
-                            src="https://www.youtube.com/embed/pbrfAdftFsQ?si=XIbPxNfZRscGE7Wh" 
+                            src="https://www.youtube.com/embed/q1UpEIco-dw" 
                             title="YouTube video player" 
                             frameborder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -662,7 +662,104 @@
         compileButton.addEventListener('touchstart', () => {
             debounceNotification('touch');
         }, { passive: true });
-        document.getElementById('bookmarkInput').value=Bookmark;document.getElementById('compileButton').href=Bookmark;document.getElementById('compileButton').addEventListener('dragstart',e=>e.dataTransfer.setData('text/uri-list',Bookmark));
+        document.getElementById('bookmarkInput').value=Bookmark;
+(function(){
+  // Make Compile Button both a draggable bookmarklet and a click-to-copy button
+  const compileButton = document.getElementById('compileButton');
+  if(!compileButton) return;
+  // Ensure the anchor points to the bookmarklet so users can drag it to their bookmarks bar
+  compileButton.href = Bookmark;
+  compileButton.setAttribute('draggable','true');
+  compileButton.style.cursor = 'grab';
+  // keep drag behavior (for desktop)
+  compileButton.addEventListener('dragstart', e => {
+    try { e.dataTransfer.setData('text/uri-list', Bookmark); } catch (err) { /* ignore */ }
+  });
+
+  // --- Toast CSS (added programmatically to avoid modifying stylesheet blocks) ---
+  if (!document.getElementById('rbx-toast-style')) {
+    const s = document.createElement('style');
+    s.id = 'rbx-toast-style';
+    s.textContent = `
+.rbx-toast {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  bottom: 6%;
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  z-index: 2000000;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+.rbx-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: none;
+}
+`;
+    document.head.appendChild(s);
+  }
+
+  // helper: show toast
+  function showToast(text, duration = 1400) {
+    let t = document.getElementById('rbx-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'rbx-toast';
+      t.className = 'rbx-toast';
+      document.body.appendChild(t);
+    }
+    t.textContent = text;
+    t.classList.add('show');
+    clearTimeout(t._hideTimeout);
+    t._hideTimeout = setTimeout(() => t.classList.remove('show'), duration);
+  }
+
+  // Copy helper with fallback
+  async function copyToClipboard(str) {
+    if (!str) return false;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(str);
+        return true;
+      }
+      const ta = document.createElement('textarea');
+      ta.value = str;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Click/tap copies the bookmarklet instead of navigating (useful on mobile and desktop)
+  compileButton.addEventListener('click', async function(e){
+    // If user held Ctrl/Meta (maybe wants to open), let default happen
+    if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+    e.preventDefault();
+    const success = await copyToClipboard(Bookmark);
+    if (success) {
+      showToast('Copied bookmarklet!');
+      // for accessibility: briefly focus the bookmark input
+      const bi = document.getElementById('bookmarkInput');
+      if (bi) bi.focus();
+    } else {
+      showToast('Copy failed — drag to bookmarks to save.');
+    }
+  }, { passive: false });
+
+})();
     </script>
 </body>
 </html>
