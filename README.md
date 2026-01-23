@@ -1,2 +1,3 @@
-# Receratesj
-&amp;/&amp;/&amp;&amp;/
+# rbxscan
+
+A modern website for scanning and analyzing Roblox experiences.
